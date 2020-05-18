@@ -1,0 +1,123 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "首页",//设置页面标题文字
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user/user",
+			"style": {
+				"navigationBarTitleText": "我的",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/scan/scan",
+			"style": {
+				"navigationBarTitleText": "扫一扫",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/scanDetail/scanDetail",
+			"style": {
+				"navigationBarTitleText": "简介",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/scanProblem/scanProblem",
+			"style": {
+				"navigationBarTitleText": "提交问题",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-problem/user-problem",
+			"style": {
+				"navigationBarTitleText": "问题列表",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-orderDetail/user-orderDetail",
+			"style": {
+				"navigationBarTitleText": "详情",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-staffDealing/user-staffDealing",
+			"style": {
+				"navigationBarTitleText": "确认处理",//员工的任务处理
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/seach/seach",
+			"style": {
+				"navigationBarTitleText": "搜索",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-inspect/user-inspect",
+			"style": {
+				"navigationBarTitleText": "巡检",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-orderDetailEdit/user-orderDetailEdit",
+			"style": {
+				"navigationBarTitleText": "详情",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-inspectAdd/user-inspectAdd",
+			"style": {
+				"navigationBarTitleText": "添加问题",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-complaint/user-complaint",
+			"style": {
+				"navigationBarTitleText": "投诉或建议",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-Task/user-Task",
+			"style": {
+				"navigationBarTitleText": "任务",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-ProblemSubmit/user-ProblemSubmit",
+			"style": {
+				"navigationBarTitleText": "问题提交",
+				"onReachBottomDistance":100
+			}
+		}
+    ],
+	"globalStyle": {
+		//"navigationStyle":"custom",
+		"navigationBarTextStyle": "white",//导航栏文字
+		"navigationBarTitleText": "",
+		"navigationBarBackgroundColor": "#7a8eff"
+	},
+	"condition": { //模式配置，仅开发期间生效
+		"current": 0, //当前激活的模式(list 的索引项)
+		"list": [{
+			"name": "", //模式名称
+			"path": "", //启动页面，必选
+			"query": "" //启动参数，在页面的onLoad函数里面得到
+		}]
+	}
+}
