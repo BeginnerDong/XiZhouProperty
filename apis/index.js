@@ -137,6 +137,78 @@ export default {
 		http.HTTP(allParams);
 	},
 
+	messageGet(param, callback) {
+		var allParams = {
+			url: 'Common/Message/get',
+			type: 'post',
+			noToken: true,
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	messageAdd(param, callback) {
+		var allParams = {
+			url: 'Common/Message/add',
+			type: 'post',
+			noToken: true,
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	messageUpdate(param, callback) {
+		var allParams = {
+			url: 'Common/Message/update',
+			type: 'post',
+			noToken: true,
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	relationUpdate(param, callback) {
+		var allParams = {
+			url: 'Common/Relation/update',
+			type: 'post',
+			noToken: true,
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	relationAdd(param, callback) {
+		var allParams = {
+			url: 'Common/Relation/add',
+			type: 'post',
+			noToken: true,
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	relationGet(param, callback) {
+		var allParams = {
+			url: 'Common/Relation/get',
+			type: 'post',
+			noToken: true,
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
 	labelGet(param, callback) {
 		var allParams = {
 			url: 'Common/Label/get',
@@ -164,7 +236,7 @@ export default {
 	},
 
 	articleGet(param, callback) {
-		
+
 		var allParams = {
 			url: 'Common/Article/get',
 			type: 'post',
@@ -236,10 +308,10 @@ export default {
 		};
 		http.HTTP(allParams);
 	},
-	
+
 
 	productGet(param, callback) {
-		if(!param.hasContent){
+		if (!param.hasContent) {
 			param.noContent = true;
 		};
 		var allParams = {
@@ -252,7 +324,7 @@ export default {
 		};
 		http.HTTP(allParams);
 	},
-	
+
 	qrDateGet(param, callback) {
 		var allParams = {
 			url: 'Common/QrDate/get',
@@ -526,8 +598,8 @@ export default {
 		};
 		http.HTTP(allParams);
 	},
-	
-	
+
+
 	addVirtualOrder(param, callback) {
 		var allParams = {
 			url: 'Func/Order/addVirtualOrder',

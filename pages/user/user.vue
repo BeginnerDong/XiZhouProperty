@@ -6,43 +6,42 @@
 		<view class="mx-3" style="margin-top: -150rpx;">
 			<view class="userBox2 rounded10 bg-white font-24 px-3 d-flex a-center j-center shadow">
 				<view class="text-center">
-					<view class="userPhoto"><image src="../../static/images/about-img.png" mode=""></image></view>
-					<view class="font-30 mt-2">年方几何</view>
+					<view class="userPhoto" style="overflow: hidden;"><open-data type="userAvatarUrl"></open-data></view>
+					<view class="font-30 mt-2"><open-data type="userNickName"></open-data></view>
 				</view>
 			</view>
-			
 		</view>
 		
 		<view class="myRowBetween font-26 mx-3 mt-3">
-			<view class="item d-flex a-center j-sb" @click="Router.navigateTo({route:{path:'/pages/user-problem/user-problem'}})" >
+			<view class="item d-flex a-center j-sb" v-if="userInfoData.behavior==0" @click="Router.navigateTo({route:{path:'/pages/user-problem/user-problem'}})" >
 				<view class="ll d-flex a-center">
 					<image class="icon" src="../../static/images/about-icon.png" mode=""></image>
 					<view class="">问题列表</view>
 				</view>
 				<view class="rr"><image class="arrowR" src="../../static/images/icon.png" mode=""></image></view>
 			</view>
-			<view class="item d-flex a-center j-sb" @click="Router.navigateTo({route:{path:'/pages/user-complaint/user-complaint'}})" >
+			<view class="item d-flex a-center j-sb" v-if="userInfoData.behavior==3" @click="Router.navigateTo({route:{path:'/pages/user-complaint/user-complaint'}})" >
 				<view class="ll d-flex a-center">
 					<image class="icon" src="../../static/images/about-icon1.png" mode=""></image>
 					<view class="">投诉或建议</view>
 				</view>
 				<view class="rr"><image class="arrowR" src="../../static/images/icon.png" mode=""></image></view>
 			</view>
-			<view class="item d-flex a-center j-sb" @click="Router.navigateTo({route:{path:'/pages/user-inspect/user-inspect'}})" >
+			<view class="item d-flex a-center j-sb" v-if="userInfoData.behavior==2" @click="Router.navigateTo({route:{path:'/pages/user-inspect/user-inspect'}})" >
 				<view class="ll d-flex a-center">
 					<image class="icon" src="../../static/images/about-icon2.png" mode=""></image>
 					<view class="">巡检</view>
 				</view>
 				<view class="rr"><image class="arrowR" src="../../static/images/icon.png" mode=""></image></view>
 			</view>
-			<view class="item d-flex a-center j-sb" @click="Router.navigateTo({route:{path:'/pages/user-Task/user-Task'}})" >
+			<view class="item d-flex a-center j-sb" v-if="userInfoData.behavior==2||userInfoData.behavior==1" @click="Router.navigateTo({route:{path:'/pages/user-Task/user-Task'}})" >
 				<view class="ll d-flex a-center">
 					<image class="icon" src="../../static/images/about-icon3.png" mode=""></image>
 					<view class="">任务</view>
 				</view>
 				<view class="rr"><image class="arrowR" src="../../static/images/icon.png" mode=""></image></view>
 			</view>
-			<view class="item d-flex a-center j-sb" @click="Router.navigateTo({route:{path:'/pages/user-ProblemSubmit/user-ProblemSubmit'}})" >
+			<view class="item d-flex a-center j-sb" v-if="userInfoData.behavior==3||userInfoData.behavior==1" @click="Router.navigateTo({route:{path:'/pages/user-ProblemSubmit/user-ProblemSubmit'}})" >
 				<view class="ll d-flex a-center">
 					<image class="icon" src="../../static/images/about-icon4.png" mode=""></image>
 					<view class="">问题提交</view>
@@ -82,18 +81,30 @@
 		data() {
 			return {
 				Router:this.$Router,
-				showView: false,
-				score:'',
-				wx_info:{}
+				userInfoData:{}
 			}
 		},
 		onLoad() {
 			const self = this;
-			//self.$Utils.loadAll(['getMainData'], self);
+			self.$Utils.loadAll(['getUserInfoData'], self);
 		},
 		methods: {
 
-
+			getUserInfoData() {
+				const self = this;
+				const postData = {};
+				postData.tokenFuncName = 'getProjectToken';
+				if(!wx.getStorageSync('user_info')||wx.getStorageSync('user_info').headImgUrl==''||!wx.getStorageSync('user_info').headImgUrl){
+				  postData.refreshToken = true;
+				};
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.userInfoData = res.info.data[0]
+					}
+					self.$Utils.finishFunc('getUserInfoData');
+				};
+				self.$apis.userInfoGet(postData, callback);
+			},
 		},
 	};
 </script>
