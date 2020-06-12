@@ -161,6 +161,8 @@
 				uni.setStorageSync('canClick', false);
 				var newObject = self.$Utils.cloneForm(self.submitData);
 				delete newObject.mainImg;
+				delete newObject.deal_no;
+				delete newObject.charge_no;
 				if(self.submitData.nameless==1){
 					delete newObject.phone;
 				};
@@ -195,7 +197,8 @@
 				};				
 				uni.chooseImage({
 					count: 1,
-					sourceType:['camera'],
+					sourceType:['camera','album'],
+					
 					success: function(res) {
 						console.log(res);
 						var tempFilePaths = res.tempFilePaths[0];

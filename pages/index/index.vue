@@ -55,7 +55,7 @@
 			if (ops.from === 'button') {
 				
 				return {
-					title:西周物业,
+					title:'西周物业',
 					path: '/pages/index/index', //点击分享的图片进到哪一个页面
 					//imageUrl:self.mainData&&self.mainData.mainImg&&self.mainData.mainImg[0]&&self.mainData.mainImg[0].url?self.mainData.mainImg[0].url:'',
 					success: function(res) {
@@ -70,7 +70,7 @@
 				}
 			}else{
 				return {
-					title:西周物业,
+					title:'西周物业',
 					path: '/pages/index/index', //点击分享的图片进到哪一个页面
 					//imageUrl:self.mainData&&self.mainData.mainImg&&self.mainData.mainImg[0]&&self.mainData.mainImg[0].url?self.mainData.mainImg[0].url:'',
 					success: function(res) {
@@ -109,6 +109,29 @@
 						
 					}
 				});
+			},
+			
+			tokenGet() {
+				const self = this;
+				const postData = {
+					searchItem: {
+						user_no: 'U530127269146934'
+					}
+				};
+				console.log('postData', postData)
+				const callback = (res) => {
+					if (res.solely_code == 100000) {
+						self.userData = res.info;
+						uni.setStorageSync('user_token', res.token);
+						uni.setStorageSync('user_no', res.info.user_no);
+						uni.setStorageSync('user_info', res.info);
+						var time = parseInt(new Date().getTime()) + 3500000;
+						uni.setStorageSync('token_expire_time',time);
+					}
+					console.log('res', res)
+					self.$Utils.finishFunc('tokenGet');
+				};
+				self.$apis.tokenGet(postData, callback);
 			},
 			
 			getUserInfoData() {

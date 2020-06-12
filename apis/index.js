@@ -30,7 +30,19 @@ export default {
 		};
 		http.HTTP(allParams);
 	},
-
+	
+	searchByStaff(param, callback) {
+	
+		var allParams = {
+			url: 'Project/Solely/searchByStaff',
+			type: 'post',
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
 
 	bindShop(param, callback) {
 
@@ -221,7 +233,18 @@ export default {
 		};
 		http.HTTP(allParams);
 	},
-
+	placeGet(param, callback) {
+		var allParams = {
+			url: 'Common/Place/get',
+			type: 'post',
+			noToken: true,
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
 	tokenGet(param, callback) {
 		var allParams = {
 			url: 'Project/Solely/getToken',

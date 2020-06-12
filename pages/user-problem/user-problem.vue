@@ -13,7 +13,7 @@
 		<view class="mx-3">
 			<view class="orderList">
 				<view class="item bg-white mt-3 px-3 py-3 rounded10 font-24" v-for="(item,index) in mainData" :key="index">
-					<view @click="Router.navigateTo({route:{path:'/pages/user-orderDetail/user-orderDetail'}})">
+					<view :data-id="item.id" @click="Router.navigateTo({route:{path:'/pages/user-orderDetail/user-orderDetail?id='+$event.currentTarget.dataset.id}})">
 						<view class="avoidOverflow2 font-26">{{item.description}}</view>
 						<view class="imgList d-flex a-start flex-wrap">
 							<view class="lis" v-for="(c_item,c_index) in item.mainImg">
@@ -29,11 +29,11 @@
 						<view class="mt-3 dasheTop pt-3">
 							<view class="d-flex a-center">
 								<image class="gpsIcon" src="../../static/images/taskl-icon.png" mode=""></image>
-								<view class="ml-1">{{item.place.name}}</view>
+								<view class="ml-1">{{item.placeName.name?item.placeName.name:'无'}}</view>
 							</view>
 							<view class="d-flex a-center flex-wrap mt-2">
-								<view>处理人：{{item.deal.name}}</view>
-								<view class="ml-5">负责人：{{item.charge.name}}</view>
+								<view>处理人：{{item.dealName.name?item.dealName.name:'无'}}</view>
+								<view class="ml-5">负责人：{{item.chargeName.name?item.chargeName.name:'无'}}</view>
 							</view>
 						</view>
 					</view>
@@ -116,8 +116,9 @@
 				postData.tokenFuncName = 'getProjectToken';
 				postData.paginate = self.$Utils.cloneForm(self.paginate);
 				postData.searchItem = self.$Utils.cloneForm(self.searchItem);
+				postData.searchItem.user_no = uni.getStorageSync('user_info').user_no;
 				postData.getAfter = {
-					deal:{
+					dealName:{
 						tableName:'UserInfo',
 						middleKey:'deal_no',
 						key:'user_no',
@@ -127,7 +128,7 @@
 						},
 						info:['name']
 					},
-					charge:{
+					chargeName:{
 						tableName:'UserInfo',
 						middleKey:'charge_no',
 						key:'user_no',
@@ -137,7 +138,7 @@
 						},
 						info:['name']
 					},
-					place:{
+					placeName:{
 						tableName:'Place',
 						middleKey:'relation_id',
 						key:'id',
@@ -164,7 +165,8 @@
 						'count',
 						{
 							thirdapp_id: 2,
-							deal: 0
+							deal: 0,
+							user_no:uni.getStorageSync('user_info').user_no
 						}
 					],
 					hasDeal: [
@@ -172,7 +174,17 @@
 						'count',
 						{
 							thirdapp_id: 2,
-							deal: 1
+							deal: 1,
+							user_no:uni.getStorageSync('user_info').user_no
+						}
+					],
+					total: [
+						'count',
+						'count',
+						{
+							thirdapp_id: 2,
+							//deal: 1,
+							user_no:uni.getStorageSync('user_info').user_no
 						}
 					],
 				};
@@ -181,7 +193,7 @@
 						self.mainData.push.apply(self.mainData, res.info.data);
 						
 					}
-					self.total = res.info.total;
+					self.total = res.info.compute.total;
 					self.noDeal = res.info.compute.noDeal;
 					self.hasDeal =  res.info.compute.hasDeal;
 					self.$Utils.finishFunc('getMainData');

@@ -27,21 +27,24 @@
 				</view>
 				<view class="rr"><image class="arrowR" src="../../static/images/icon.png" mode=""></image></view>
 			</view>
-			<view class="item d-flex a-center j-sb" v-if="userInfoData.behavior==2" @click="Router.navigateTo({route:{path:'/pages/user-inspect/user-inspect'}})" >
+			<view class="item d-flex a-center j-sb" v-if="userInfoData.behavior==2||userInfoData.behavior==3" 
+			@click="Router.navigateTo({route:{path:'/pages/user-inspect/user-inspect?type='+userInfoData.behavior}})" >
 				<view class="ll d-flex a-center">
 					<image class="icon" src="../../static/images/about-icon2.png" mode=""></image>
 					<view class="">巡检</view>
 				</view>
 				<view class="rr"><image class="arrowR" src="../../static/images/icon.png" mode=""></image></view>
 			</view>
-			<view class="item d-flex a-center j-sb" v-if="userInfoData.behavior==2||userInfoData.behavior==1" @click="Router.navigateTo({route:{path:'/pages/user-Task/user-Task'}})" >
+			<view class="item d-flex a-center j-sb" v-if="userInfoData.behavior!=0" 
+			@click="Router.navigateTo({route:{path:'/pages/user-Task/user-Task?type='+userInfoData.behavior}})" >
 				<view class="ll d-flex a-center">
 					<image class="icon" src="../../static/images/about-icon3.png" mode=""></image>
 					<view class="">任务</view>
 				</view>
 				<view class="rr"><image class="arrowR" src="../../static/images/icon.png" mode=""></image></view>
 			</view>
-			<view class="item d-flex a-center j-sb" v-if="userInfoData.behavior==3||userInfoData.behavior==1" @click="Router.navigateTo({route:{path:'/pages/user-ProblemSubmit/user-ProblemSubmit'}})" >
+			<view class="item d-flex a-center j-sb" v-if="userInfoData.behavior==3||userInfoData.behavior==1" 
+			@click="Router.navigateTo({route:{path:'/pages/user-problem/user-problem'}})" >
 				<view class="ll d-flex a-center">
 					<image class="icon" src="../../static/images/about-icon4.png" mode=""></image>
 					<view class="">问题提交</view>
@@ -59,7 +62,7 @@
 				</view>
 				<view class="text">首页</view>
 			</view>
-			<view class="navbar_item Middle" @click="Router.redirectTo({route:{path:'/pages/scan/scan'}})" >
+			<view class="navbar_item Middle" @click="scanCode()" >
 				<view class="nav_img">
 					<image src="../../static/images/nabar2-a.png" />
 				</view>
@@ -89,7 +92,30 @@
 			self.$Utils.loadAll(['getUserInfoData'], self);
 		},
 		methods: {
-
+			
+			scanCode() {
+				const self = this;
+				uni.scanCode({
+					success: function(res) {
+						/* self.Router.navigateTo({
+							route: {
+								path: '/pages/storeOrder-hexiao/storeOrder-hexiao?id=' + res.result
+							}
+						}) */
+						console.log('条码内容：' + res.result);
+						self.result = res.result.split('-');
+						if(self.result[0]&&self.result[0]=='Article'){
+							self.Router.navigateTo({route:{path:'/pages/scanDetail/scanDetail?id='+self.result[1]}})
+						}else if(self.result[0]&&self.result[0]=='Place'){
+							self.Router.navigateTo({route:{path:'/pages/scanProblem/scanProblem?id='+self.result[1]}})
+						}else{
+							self.$Utils.showToast('二维码无效')
+						}
+						
+					}
+				});
+			},
+			
 			getUserInfoData() {
 				const self = this;
 				const postData = {};
