@@ -96,9 +96,15 @@
 				timeStamp:0
 			}
 		},
+		
 		onLoad(options) {
 			const self = this;
 			self.paginate = self.$Utils.cloneForm(self.$AssetsConfig.paginate);
+			
+		},
+		
+		onShow() {
+			const self = this;
 			self.$Utils.loadAll(['getUserInfoData'], self);
 		},
 		
@@ -165,7 +171,7 @@
 						}else if(self.userInfoData.behavior==2){
 							self.searchItem.charge_no = wx.getStorageSync('user_info').user_no
 						}
-						self.getMainData();
+						self.getMainData(true);
 					}
 					
 				};

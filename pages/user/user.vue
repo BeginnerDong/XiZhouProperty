@@ -1,49 +1,53 @@
 <template>
-	<view>
+	<view v-if="showAll">
 		
 		<view class="userHead  main-bg-color"></view>
 		
 		<view class="mx-3" style="margin-top: -150rpx;">
 			<view class="userBox2 rounded10 bg-white font-24 px-3 d-flex a-center j-center shadow">
 				<view class="text-center">
-					<view class="userPhoto" style="overflow: hidden;"><open-data type="userAvatarUrl"></open-data></view>
-					<view class="font-30 mt-2"><open-data type="userNickName"></open-data></view>
+					<view class="userPhoto" style="overflow: hidden;">
+						<image :src="userData.headImgUrl?userData.headImgUrl:'../../static/images/head.png'"></image>
+					</view>
+					<view class="font-30 mt-2" v-if="userData.nickname">{{userData.nickname?userData.nickname:''}}</view>
+					<button style="margin-top: 10px;padding: 0 10px;font-size: 13px;background-color: #7a8eff;color: #fff;height: 25px;line-height: 25px;" v-else open-type="getUserInfo" @getuserinfo="Utils.stopMultiClick(submit)">点击登录</button>
 				</view>
 			</view>
+			
 		</view>
 		
-		<view class="myRowBetween font-26 mx-3 mt-3">
-			<view class="item d-flex a-center j-sb" v-if="userInfoData.behavior==0" @click="Router.navigateTo({route:{path:'/pages/user-problem/user-problem'}})" >
+		<view class="myRowBetween font-26 mx-3 mt-3" v-if="userData.nickname">
+			<view class="item d-flex a-center j-sb" v-if="userData.info.behavior==0" @click="Router.navigateTo({route:{path:'/pages/user-problem/user-problem'}})" >
 				<view class="ll d-flex a-center">
 					<image class="icon" src="../../static/images/about-icon.png" mode=""></image>
 					<view class="">问题列表</view>
 				</view>
 				<view class="rr"><image class="arrowR" src="../../static/images/icon.png" mode=""></image></view>
 			</view>
-			<view class="item d-flex a-center j-sb" v-if="userInfoData.behavior==3" @click="Router.navigateTo({route:{path:'/pages/user-complaint/user-complaint'}})" >
+			<view class="item d-flex a-center j-sb" v-if="userData.info.behavior==3" @click="Router.navigateTo({route:{path:'/pages/user-complaint/user-complaint'}})" >
 				<view class="ll d-flex a-center">
 					<image class="icon" src="../../static/images/about-icon1.png" mode=""></image>
 					<view class="">投诉或建议</view>
 				</view>
 				<view class="rr"><image class="arrowR" src="../../static/images/icon.png" mode=""></image></view>
 			</view>
-			<view class="item d-flex a-center j-sb" v-if="userInfoData.behavior==2||userInfoData.behavior==3" 
-			@click="Router.navigateTo({route:{path:'/pages/user-inspect/user-inspect?type='+userInfoData.behavior}})" >
+			<view class="item d-flex a-center j-sb" v-if="userData.info.behavior==2||userData.info.behavior==3" 
+			@click="Router.navigateTo({route:{path:'/pages/user-inspect/user-inspect?type='+userData.info.behavior}})" >
 				<view class="ll d-flex a-center">
 					<image class="icon" src="../../static/images/about-icon2.png" mode=""></image>
 					<view class="">巡检</view>
 				</view>
 				<view class="rr"><image class="arrowR" src="../../static/images/icon.png" mode=""></image></view>
 			</view>
-			<view class="item d-flex a-center j-sb" v-if="userInfoData.behavior!=0" 
-			@click="Router.navigateTo({route:{path:'/pages/user-Task/user-Task?type='+userInfoData.behavior}})" >
+			<view class="item d-flex a-center j-sb" v-if="userData.info.behavior!=0" 
+			@click="Router.navigateTo({route:{path:'/pages/user-Task/user-Task?type='+userData.info.behavior}})" >
 				<view class="ll d-flex a-center">
 					<image class="icon" src="../../static/images/about-icon3.png" mode=""></image>
 					<view class="">任务</view>
 				</view>
 				<view class="rr"><image class="arrowR" src="../../static/images/icon.png" mode=""></image></view>
 			</view>
-			<view class="item d-flex a-center j-sb" v-if="userInfoData.behavior==3||userInfoData.behavior==1" 
+			<view class="item d-flex a-center j-sb" v-if="userData.info.behavior==3||userData.info.behavior==1" 
 			@click="Router.navigateTo({route:{path:'/pages/user-problem/user-problem'}})" >
 				<view class="ll d-flex a-center">
 					<image class="icon" src="../../static/images/about-icon4.png" mode=""></image>
@@ -84,17 +88,41 @@
 		data() {
 			return {
 				Router:this.$Router,
-				userInfoData:{}
+				userData:{},
+				Utils:this.$Utils,
+				showAll:false
 			}
 		},
+		
 		onLoad() {
 			const self = this;
-			self.$Utils.loadAll(['getUserInfoData'], self);
+			if(uni.getStorageSync('user_token')){
+				self.$Utils.loadAll(['getUserData'], self);
+			}else{
+				self.showAll = true
+			}
 		},
+		
 		methods: {
+			
+			showToast(){
+				uni.showModal({
+					title:'提示',
+					content:'请先登录',
+					showCancel:false
+				})
+			},
 			
 			scanCode() {
 				const self = this;
+				if(!uni.getStorageSync('user_token')){
+					uni.showModal({
+						title:'提示',
+						content:'请先登录',
+						showCancel:false
+					})
+					return
+				};
 				uni.scanCode({
 					success: function(res) {
 						/* self.Router.navigateTo({
@@ -116,7 +144,17 @@
 				});
 			},
 			
-			getUserInfoData() {
+			submit() {
+				const self = this;
+				uni.setStorageSync('canClick', false);
+				const callback = (user, res) => {
+					console.log(res)
+					self.getUserData();
+				};
+				self.$Utils.getAuthSetting(callback);
+			},
+			
+			getUserData() {
 				const self = this;
 				const postData = {};
 				postData.tokenFuncName = 'getProjectToken';
@@ -125,11 +163,13 @@
 				};
 				const callback = (res) => {
 					if (res.info.data.length > 0) {
-						self.userInfoData = res.info.data[0]
-					}
-					self.$Utils.finishFunc('getUserInfoData');
+						self.userData = res.info.data[0]
+					};
+					self.showAll = true;
+					uni.setStorageSync('canClick', true);
+					self.$Utils.finishFunc('getUserData');
 				};
-				self.$apis.userInfoGet(postData, callback);
+				self.$apis.userGet(postData, callback);
 			},
 		},
 	};

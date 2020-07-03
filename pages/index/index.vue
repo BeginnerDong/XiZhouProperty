@@ -46,7 +46,7 @@
 		},
 		onLoad() {
 			const self = this;
-			self.$Utils.loadAll(['getMainData','getUserInfoData'], self);
+			self.$Utils.loadAll(['getMainData'], self);
 		},
 		
 		onShareAppMessage(ops) {
@@ -90,6 +90,22 @@
 			
 			scanCode() {
 				const self = this;
+				if(!uni.getStorageSync('user_token')){
+					uni.showModal({
+						title:'提示',
+						content:'您还未登录，是否去登录？',
+						success(res) {
+							if(res.confirm){
+								self.Router.redirectTo({
+									route: {
+										path: '/pages/user/user'
+									}
+								})
+							}
+						}
+					});
+					return
+				};
 				uni.scanCode({
 					success: function(res) {
 						/* self.Router.navigateTo({
@@ -134,7 +150,7 @@
 				self.$apis.tokenGet(postData, callback);
 			},
 			
-			getUserInfoData() {
+			/* getUserInfoData() {
 				const self = this;
 				const postData = {};
 				postData.tokenFuncName = 'getProjectToken';
@@ -148,7 +164,7 @@
 					self.$Utils.finishFunc('getUserInfoData');
 				};
 				self.$apis.userInfoGet(postData, callback);
-			},
+			}, */
 			
 			getMainData() {
 				const self = this;
